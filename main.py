@@ -2,15 +2,13 @@ import pygame
 import random
 import math
 
-# Инициализация Pygame
 pygame.init()
 
-# Настройки экрана
 WIDTH, HEIGHT = 800, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Арена-шутер с квадратами")
+pygame.display.set_caption("Арена шутер")
 
-# Цвета
+
 WHITE = (0, 0, 0)
 BLACK = (255, 255, 255)
 RED = (255, 0, 0)
@@ -18,12 +16,12 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
 
-# Игрок
+
 class Player:
     def __init__(self):
         self.x = WIDTH // 2
         self.y = HEIGHT // 2
-        self.size = 20  # Размер квадрата
+        self.size = 20 
         self.speed = 5
         self.health = 100
         self.max_health = 100
@@ -55,8 +53,7 @@ class Player:
     def update(self):
         if self.shoot_cooldown > 0:
             self.shoot_cooldown -= 1
-        
-        # Обновление пуль
+
         for bullet in self.bullets[:]:
             bullet[0] += bullet[2]
             bullet[1] += bullet[3]
@@ -65,12 +62,12 @@ class Player:
                 self.bullets.remove(bullet)
     
     def draw(self, screen):
-        # Рисуем квадрат игрока
+
         pygame.draw.rect(screen, self.color, 
                          (self.x - self.size//2, self.y - self.size//2, 
                           self.size, self.size))
         
-        # Полоска здоровья
+
         health_bar_length = 50
         health_ratio = self.health / self.max_health
         pygame.draw.rect(screen, RED, (self.x - health_bar_length//2, self.y - 30, 
@@ -78,12 +75,12 @@ class Player:
         pygame.draw.rect(screen, GREEN, (self.x - health_bar_length//2, self.y - 30, 
                                         health_bar_length * health_ratio, 5))
         
-        # Рисуем пули (маленькие квадраты)
+
         for bullet in self.bullets:
             pygame.draw.rect(screen, BLACK, 
                             (int(bullet[0]) - 2, int(bullet[1]) - 2, 4, 4))
 
-# Враги с ИИ
+
 class Enemy:
     def __init__(self, x, y, enemy_type="shooter"):
         self.x = x
@@ -97,7 +94,7 @@ class Enemy:
         self.shoot_cooldown = random.randint(30, 60)
         self.direction_change_cooldown = 0
         
-        # Разные типы врагов
+
         if self.type == "shooter":
             self.color = RED
         elif self.type == "rusher":
@@ -106,10 +103,10 @@ class Enemy:
         elif self.type == "tank":
             self.color = (150, 0, 0)
             self.health = 60
-            self.size = 22  # Танк больше
+            self.size = 22
     
     def move(self, player_x, player_y):
-        # Разное поведение для разных типов врагов
+
         if self.type == "rusher":
             dx = player_x - self.x
             dy = player_y - self.y
@@ -172,12 +169,12 @@ class Enemy:
                 self.bullets.remove(bullet)
     
     def draw(self, screen):
-        # Рисуем квадрат врага
+
         pygame.draw.rect(screen, self.color, 
                          (self.x - self.size//2, self.y - self.size//2, 
                           self.size, self.size))
         
-        # Мини-полоска здоровья
+
         health_bar_length = 20
         max_health = 60 if self.type == "tank" else 30
         health_ratio = self.health / max_health
@@ -186,12 +183,11 @@ class Enemy:
         pygame.draw.rect(screen, GREEN, (self.x - health_bar_length//2, self.y - 25, 
                                         health_bar_length * health_ratio, 3))
         
-        # Рисуем пули врагов (маленькие квадраты)
+
         for bullet in self.bullets:
             pygame.draw.rect(screen, YELLOW, 
                             (int(bullet[0]) - 2, int(bullet[1]) - 2, 4, 4))
 
-# Игровые переменные
 player = Player()
 enemies = []
 wave = 1
@@ -200,7 +196,7 @@ game_over = False
 game_won = False
 font = pygame.font.SysFont(None, 36)
 
-# Функция для создания волны врагов
+
 def spawn_wave(wave_num):
     num_enemies = 3 + wave_num * 2
     for _ in range(num_enemies):
@@ -229,7 +225,7 @@ def spawn_wave(wave_num):
 
 spawn_wave(wave)
 
-# Основной игровой цикл
+
 clock = pygame.time.Clock()
 running = True
 
@@ -252,7 +248,7 @@ while running:
             enemy.shoot_at_player(player.x, player.y)
             enemy.update_bullets()
             
-            # Проверка столкновения (квадрат с квадратом)
+
             if (abs(enemy.x - player.x) < (enemy.size//2 + player.size//2) and
                 abs(enemy.y - player.y) < (enemy.size//2 + player.size//2)):
                 player.health -= 2 if enemy.type == "rusher" else 1

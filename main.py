@@ -296,11 +296,11 @@ while running:
     screen.blit(health_text, (10, 90))
     
     if game_over:
-        game_over_text = font.render("Игра окончена!", True, RED)
+        game_over_text = font.render("lose", True, RED)
         screen.blit(game_over_text, (WIDTH//2 - 100, HEIGHT//2))
     
     if game_won:
-        win_text = font.render("Победа! Все волны пройдены", True, GREEN)
+        win_text = font.render("ezez", True, GREEN)
         screen.blit(win_text, (WIDTH//2 - 180, HEIGHT//2))
     
     pygame.display.flip()
